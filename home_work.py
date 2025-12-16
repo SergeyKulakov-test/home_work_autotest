@@ -24,9 +24,9 @@ def open_brauser(brouser_driver):
     base_url = "https://www.saucedemo.com/"  #Открываемая страница
     driver.get(base_url)
     driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
-    user_name = driver.find_element(By.ID, "user-name") #Поиск поля Username (input)
+    user_name = driver.find_element(By.XPATH, "//input[@id='user-name']") #Поиск поля Username(input)
     user_name.send_keys("standard_user") #Заполнение поля Username данными
-    user_password = driver.find_element(By.ID, "password") #Поиск поля Password (input)
+    user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Поиск поля Password (input)
     user_password.send_keys("secret_sauce") #Заполнение поля Password данными
 
 
