@@ -6,6 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 from selenium.webdriver.edge.options import Options
+from selenium.webdriver.common.by import By
 
 
 #Драйвера браузеров
@@ -20,9 +21,13 @@ driver_edge = webdriver.Edge(options=Options().add_experimental_option("detach",
 #Функция открытия браузера
 def open_brauser(brouser_driver):
     driver = brouser_driver
-    base_url = "https://www.saucedemo.com/ "  # Открываемая страница
+    base_url = "https://www.saucedemo.com/"  #Открываемая страница
     driver.get(base_url)
-    driver.set_window_size(1200, 900)  # открытие окна с заданным разрешением
+    driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
+    user_name = driver.find_element(By.ID, "user-name") #Поиск поля Username (input)
+    user_name.send_keys("standard_user") #Заполнение поля Username данными
+    user_password = driver.find_element(By.ID, "password") #Поиск поля Password (input)
+    user_password.send_keys("secret_sauce") #Заполнение поля Password данными
 
 
 #Открываем браузер Chrome
