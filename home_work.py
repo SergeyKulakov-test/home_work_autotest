@@ -28,7 +28,8 @@ def open_brauser(brouser_driver):
     user_name.send_keys("standard_user") #Заполнение поля Username данными
     user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Поиск поля Password (input)
     user_password.send_keys("secret_sauce") #Заполнение поля Password данными
-
+    button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
+    button_login.click() #Нажатие кнопки Login
 
 #Открываем браузер Chrome
 open_brauser(driver_crome)
