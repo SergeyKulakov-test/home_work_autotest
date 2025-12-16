@@ -9,7 +9,10 @@ from selenium.webdriver.edge.options import Options
 
 
 #Драйвера браузеров
-driver_crome = webdriver.Chrome(options=webdriver.ChromeOptions().add_experimental_option("detach", True), service=ChromeService(ChromeDriverManager().install()))
+driver_crome = webdriver.Chrome(
+    options=webdriver.ChromeOptions().add_experimental_option("detach", True),
+    service=ChromeService(ChromeDriverManager().install())
+)
 driver_firefox = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()))
 driver_edge = webdriver.Edge(options=Options().add_experimental_option("detach", True))
 
