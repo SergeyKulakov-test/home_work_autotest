@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 #Драйвера браузера Chrome, настройки
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
+options.add_argument('--headless') #Запуск в фоновом режиме (без открытия браузера)
 driver_crome = webdriver.Chrome(
     options=options,
     service=ChromeService(ChromeDriverManager().install())
