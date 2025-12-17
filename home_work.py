@@ -13,7 +13,6 @@ driver_crome = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-
 #Функция открытия браузера
 def open_brauser(brouser_driver):
     driver = brouser_driver
@@ -23,11 +22,11 @@ def open_brauser(brouser_driver):
 
     #Ввод данных
     user_name = driver.find_element(By.XPATH, "//input[@id='user-name']") #Поиск поля Username(input)
-    user_name.send_keys("standard_user") #Заполнение поля Username данными
+    user_name.send_keys("standard_user") #Заполнение поля Username корректными данными
     print("Ввод логина (поле Username)")
 
     user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Поиск поля Password (input)
-    user_password.send_keys("secret_sauce") #Заполнение поля Password данными
+    user_password.send_keys("secret") #Заполнение поля Password не корректными данными
     print("Ввод пароля (поле Password)")
 
     #Авторизация/вход
@@ -35,18 +34,16 @@ def open_brauser(brouser_driver):
     button_login.click() #Нажатие кнопки Login
     print("Нажатие на кнопку Login")
 
-    #Проверка Url
-    print(driver.current_url) #Вывод Url  страницы
-    get_url = driver.current_url #Получение текущего Url страницы для сранения
-    url = 'https://www.saucedemo.com/inventory.html' #Ожидаемый Url страницы
-    assert url == get_url, "Полученный Url не совпадает с ожидаемым"
-    print("Url корректен")
+    #Ошибка при вводе пароля
+    waring_text = driver.find_element(By.XPATH, "//h3[@data-test='error']") #Поиск сообщения об ошибке
+    value_warring_text = waring_text.text
+    assert value_warring_text == 'Epic sadface: Username and password do not match any user in this service', "Текст сообщения об ошибке не совпадает" #Проверка соответствия текста ошибки
+    print("Сообщение об ошибке корректно")
 
-    #Проверка, что страница загрузилась
-    text_product = driver.find_element(By.XPATH, '//span[@class="title"]') #Находим уникальный элемент страницы
-    value_text_product = text_product.text #Получаем текст уникального элемента для сравнения
-    assert value_text_product == "Products", "Текст уникального элемента должен совпадать"
-    print("Текст элемента корректен")
+    #Закрытие сообщения об ошибке
+    error_button = driver.find_element(By.XPATH, "//button[@class='error-button']") #Поиск кнопки закрытия сообщения
+    error_button.click() #Нажатие кнопки закрытия сообщения
+    print("Кнопка закрытия сообщения об ошибке нажата")
 
 
 #Открываем браузер Chrome
