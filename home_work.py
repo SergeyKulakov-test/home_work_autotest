@@ -1,3 +1,5 @@
+import time
+
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
@@ -7,7 +9,7 @@ from selenium.webdriver.common.by import By
 #Драйвера браузера Chrome, настройки
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
-options.add_argument('--headless') #Запуск в фоновом режиме (без открытия браузера)
+#options.add_argument('--headless') #Запуск в фоновом режиме (без открытия браузера)
 driver_crome = webdriver.Chrome(
     options=options,
     service=ChromeService(ChromeDriverManager().install())
@@ -45,6 +47,8 @@ def open_brauser(brouser_driver):
     error_button.click() #Нажатие кнопки закрытия сообщения
     print("Кнопка закрытия сообщения об ошибке нажата")
 
+    time.sleep(3) #Задержка исполнения кода
+    driver.refresh() #Обновление страницы
 
 #Открываем браузер Chrome
 open_brauser(driver_crome)
