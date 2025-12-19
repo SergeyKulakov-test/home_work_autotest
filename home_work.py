@@ -47,4 +47,5 @@ print("Поле Password очищено")
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
-
+time.sleep(3) #Задержка исполнения кода
+driver.close()
