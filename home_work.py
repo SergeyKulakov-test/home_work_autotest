@@ -1,6 +1,7 @@
 import time
 
 from selenium import webdriver
+from selenium.webdriver import Keys
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
@@ -29,21 +30,21 @@ user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Пои
 user_password.send_keys("secret") #Заполнение поля Password не корректными данными
 print("Ввод пароля (поле Password)")
 
+#Удаление заполненых полей
+user_name.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Username
+print("Поле Username выделено")
+time.sleep(3) #Задержка исполнения кода
+user_name.send_keys(Keys.BACKSPACE) #Очищаем поле Username
+print("Поле Username очищено")
+
+user_password.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Password
+print("Поле Password выделено")
+time.sleep(3) #Задержка исполнения кода
+user_password.send_keys(Keys.BACKSPACE) #Очищаем поле Password
+print("Поле Password очищено")
+
 #Авторизация/вход
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
-button_login.click() #Нажатие кнопки Login
+button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
 
-#Ошибка при вводе пароля
-waring_text = driver.find_element(By.XPATH, "//h3[@data-test='error']") #Поиск сообщения об ошибке
-value_warring_text = waring_text.text
-assert value_warring_text == 'Epic sadface: Username and password do not match any user in this service', "Текст сообщения об ошибке не совпадает" #Проверка соответствия текста ошибки
-print("Сообщение об ошибке корректно")
-
-#Закрытие сообщения об ошибке
-error_button = driver.find_element(By.XPATH, "//button[@class='error-button']") #Поиск кнопки закрытия сообщения
-error_button.click() #Нажатие кнопки закрытия сообщения
-print("Кнопка закрытия сообщения об ошибке нажата")
-
-time.sleep(3) #Задержка исполнения кода
-driver.refresh() #Обновление страницы
