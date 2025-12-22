@@ -2,10 +2,11 @@ import time
 import datetime
 
 from selenium import webdriver
-from selenium.webdriver import Keys
+from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 #Драйвера браузера Chrome, настройки
@@ -35,11 +36,19 @@ print("Ввод пароля (поле Password)")
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
-time.sleep(3) #Задержка исполнения кода
 
-#Создание скриншотов
-now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S") #Создание переменной с текущем временем
-name_screenshot = 'screenshot' + now_date + '.png' #Создание уникального иени скиншота
-driver.save_screenshot('C:\\Users\\user\\PycharmProjects\\Auto-test-project\\screen\\' + name_screenshot) #Сохраниение скриншота
-print("Скриншот сохранен")
+#Добавление в корзину товаров из католога
+button_add_backpack = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-backpack']").click()
+button_add_bike = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bike-light']").click()
+button_add_t_shirt = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']").click()
+button_add_jacket = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-fleece-jacket']").click()
+button_add_onesie = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-onesie']").click()
+button_add_t_shirt_red = driver.find_element(By.XPATH, "//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']").click()
+button_add_cart_link = driver.find_element(By.XPATH, "//a[@data-test='shopping-cart-link']").click()
+
+actions = ActionChains(driver) #Создание экземпляра класса для перемещения по окну браузера
+element = driver.find_element(By.ID, "item_3_title_link") #Находим элемент
+actions.move_to_element(element).perform() #Перемещаемся к элементу
+
+time.sleep(3) #Задержка исполнения кода
 driver.close()
