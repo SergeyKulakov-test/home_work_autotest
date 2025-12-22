@@ -38,13 +38,15 @@ button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
 
 #Добавление в корзину товаров из католога
-button_add_backpack = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-backpack']").click()
-button_add_bike = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bike-light']").click()
-button_add_t_shirt = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']").click()
-button_add_jacket = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-fleece-jacket']").click()
-button_add_onesie = driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-onesie']").click()
-button_add_t_shirt_red = driver.find_element(By.XPATH, "//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']").click()
-button_add_cart_link = driver.find_element(By.XPATH, "//a[@data-test='shopping-cart-link']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-backpack']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bike-light']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-fleece-jacket']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-onesie']").click()
+driver.find_element(By.XPATH, "//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']").click()
+
+#Переход в корзину
+driver.find_element(By.XPATH, "//a[@data-test='shopping-cart-link']").click()
 
 actions = ActionChains(driver) #Создание экземпляра класса для перемещения по окну браузера
 element = driver.find_element(By.ID, "item_3_title_link") #Находим элемент
