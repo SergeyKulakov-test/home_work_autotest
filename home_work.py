@@ -1,4 +1,5 @@
 import time
+import datetime
 
 from selenium import webdriver
 from selenium.webdriver import Keys
@@ -27,25 +28,18 @@ user_name.send_keys("standard_user") #Заполнение поля Username к�
 print("Ввод логина (поле Username)")
 
 user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Поиск поля Password (input)
-user_password.send_keys("secret") #Заполнение поля Password не корректными данными
+user_password.send_keys("secret_sauce") #Заполнение поля Password не корректными данными
 print("Ввод пароля (поле Password)")
-
-#Удаление заполненых полей
-user_name.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Username
-print("Поле Username выделено")
-time.sleep(3) #Задержка исполнения кода
-user_name.send_keys(Keys.BACKSPACE) #Очищаем поле Username
-print("Поле Username очищено")
-
-user_password.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Password
-print("Поле Password выделено")
-time.sleep(3) #Задержка исполнения кода
-user_password.send_keys(Keys.BACKSPACE) #Очищаем поле Password
-print("Поле Password очищено")
 
 #Авторизация/вход
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
+
+#Создание скриншотов
+now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S") #Создание переменной с текущем временем
+name_screenshot = 'screenshot' + now_date + '.png' #Создание уникального иени скиншота
 time.sleep(3) #Задержка исполнения кода
+driver.save_screenshot('C:\\Users\\user\\PycharmProjects\\Auto-test-project\\screen\\' + name_screenshot) #Сохраниение скриншота
+print("Скриншот сохранен")
 driver.close()
