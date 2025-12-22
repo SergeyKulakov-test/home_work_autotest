@@ -35,11 +35,11 @@ print("Ввод пароля (поле Password)")
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
+time.sleep(3) #Задержка исполнения кода
 
 #Создание скриншотов
 now_date = datetime.datetime.now().strftime("%Y.%m.%d-%H.%M.%S") #Создание переменной с текущем временем
 name_screenshot = 'screenshot' + now_date + '.png' #Создание уникального иени скиншота
-time.sleep(3) #Задержка исполнения кода
 driver.save_screenshot('C:\\Users\\user\\PycharmProjects\\Auto-test-project\\screen\\' + name_screenshot) #Сохраниение скриншота
 print("Скриншот сохранен")
 driver.close()
