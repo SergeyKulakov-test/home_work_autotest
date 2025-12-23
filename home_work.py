@@ -23,34 +23,35 @@ base_url = "https://www.saucedemo.com/"  #Открываемая страниц�
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
-#Ввод данных
+#Ввод не корректных данных
 user_name = driver.find_element(By.XPATH, "//input[@id='user-name']") #Поиск поля Username(input)
-user_name.send_keys("standard_user") #Заполнение поля Username корректными данными
-print("Ввод логина (поле Username)")
+user_name.send_keys("standard") #Заполнение поля Username не корректными данными
+print("Ввод некорректного логина (поле Username)")
 
 user_password = driver.find_element(By.XPATH, "//input[@id='password']") #Поиск поля Password (input)
+user_password.send_keys("secret") #Заполнение поля Password не корректными данными
+print("Ввод некорректного пароля (поле Password)")
+
+#Удаление заполненых полей
+user_name.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Username
+user_name.send_keys(Keys.DELETE) #Очищаем поле Username
+print("Очистка логина (поле Username)")
+
+user_password.send_keys(Keys.CONTROL + 'a') #Выдиляем поле Password
+user_password.send_keys(Keys.DELETE) #Очищаем поле Password
+print("Очистка пароля (поле Password)")
+
+#Ввод корректных данных
+user_name.send_keys("standard_user") #Заполнение поля Username корректными данными
+print("Ввод корректного логина (поле Username)")
+
 user_password.send_keys("secret_sauce") #Заполнение поля Password не корректными данными
-print("Ввод пароля (поле Password)")
+print("Ввод корректного пароля (поле Password)")
 
 #Авторизация/вход
 button_login = driver.find_element(By.ID, "login-button") #Поиск кнопки Login
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
-
-#Добавление в корзину товаров из католога
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-backpack']").click()
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bike-light']").click()
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-bolt-t-shirt']").click()
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-fleece-jacket']").click()
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-sauce-labs-onesie']").click()
-driver.find_element(By.XPATH, "//button[@id='add-to-cart-test.allthethings()-t-shirt-(red)']").click()
-
-#Переход в корзину
-driver.find_element(By.XPATH, "//a[@data-test='shopping-cart-link']").click()
-
-actions = ActionChains(driver) #Создание экземпляра класса для перемещения по окну браузера
-element = driver.find_element(By.ID, "item_3_title_link") #Находим элемент
-actions.move_to_element(element).perform() #Перемещаемся к элементу
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
