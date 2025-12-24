@@ -12,6 +12,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 #Драйвера браузера Chrome, настройки
 options = webdriver.ChromeOptions()
 options.add_experimental_option("detach", True)
+# Опции для отключения проверки утечки паролей
+prefs = {
+    "credentials_enable_service": False,
+    "profile.password_manager_enabled": False,
+    "profile.password_manager_leak_detection": False  # Отключаем обнаружение утечек
+}
+options.add_experimental_option("prefs", prefs)
+options.add_argument("--password-store=basic")
 #options.add_argument('--headless') #Запуск в фоновом режиме (без открытия браузера)
 
 driver = webdriver.Chrome(
@@ -53,5 +61,17 @@ button_login = driver.find_element(By.ID, "login-button") #Поиск кнопк
 button_login.send_keys(Keys.ENTER) #Нажатие кнопки Login
 print("Нажатие на кнопку Login")
 
-time.sleep(3) #Задержка исполнения кода
+#Открытие меню, выход на страницу авторизации
+driver.find_element(By.ID, "react-burger-menu-btn").click() #Поиск и нажатие кнопки меню
+print("Нажатие на кнопку меню")
+
+button_logout = driver.find_element(By.ID, "logout_sidebar_link") #Поиск кнопки выхода
+time.sleep(1) #Задержка исполнения кода
+button_logout.click() #Нажатие кнопки выхода
+print("Нажатие на кнопку выхода")
+
+time.sleep(1) #Задержка исполнения кода
+driver.find_element(By.ID, "login-button") #Поиск кнопки Login (проверка, что страница загружена)
+print("Кнопка авторизации присутствует")
+time.sleep(2) #Задержка исполнения кода
 driver.close()
