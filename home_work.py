@@ -28,16 +28,18 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://demoqa.com/checkbox"  #Открываемая страница
+base_url = "https://demoqa.com/radio-button"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
 #Установка чекбокса и его проверка
-check_box = driver.find_element(By.XPATH, "//span[@class='rct-checkbox']") #Поиск чекбокса на странице
-print("Чекбокс найден на странице")
-check_box.click() #Установка чекбокса
-assert driver.find_element(By.XPATH, "//*[@id='tree-node-home']").is_selected(), "Чекбокс не установлен" #Проверка что чекбокс установлен
-print("Чекбокс установлен")
+radio_button = driver.find_element(By.XPATH, "//*[@id='app']/div/div/div/div[2]/div[2]/div[3]/label") #Поиск элемента label на странице для клика (второй)
+print("Радиобатон найден на странице")
+radio_button.click() #Установка чекбокса
+assert driver.find_element(By.XPATH, "//*[@id='impressiveRadio']").is_selected(), "Радиобатон не установлен" #Проверка что радиобатон установлен
+print("Радиобатон установлен")
+assert driver.find_element(By.XPATH, "//*[@id='app']/div/div/div/div[2]/div[2]/p").text == "You have selected Impressive" , "Установлен не второй радиобатон" #Проверка что радиобатон установлен правильно (выбран второй)
+print("Радиобатон установлен правильно, выбран второй вариант")
 
 time.sleep(1) #Задержка исполнения кода
 driver.close()
