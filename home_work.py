@@ -1,6 +1,5 @@
 import time
-import datetime
-from tabnanny import check
+from datetime import datetime, timedelta
 
 from selenium import webdriver
 from selenium.webdriver import Keys, ActionChains
@@ -28,23 +27,19 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://demoqa.com/buttons"  #Открываемая страница
+base_url = "https://demoqa.com/date-picker"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
-#Проверка кликов: двойной клик и клик правой кнопкой
-actions = ActionChains(driver)
-double_click_button = driver.find_element(By.XPATH, "//button[@id='doubleClickBtn']") #Поиск кнопки для двойного клика
-actions.double_click(double_click_button).perform() #Выполнение двойного клика
-print("Произведен двойной клик мыши")
-assert driver.find_element(By.XPATH, "//p[@id='doubleClickMessage']").text == "You have done a double click", "Двойной клик не произведен" #Проверка, что двойной клик произведен
-print("Двойной клик мыши выполнен")
+#Ввод даты
+date_input = driver.find_element(By.XPATH, "//input[@id='datePickerMonthYearInput']") #Поиск поля для ввода даты
+date_input.send_keys(Keys.CONTROL + "a") #Выделение содержимого поля
+date_input.send_keys(Keys.DELETE)  #Очистка поля даты
+print("Произведена очистка поля для ввода даты")
 
-right_click_button = driver.find_element(By.XPATH, "//button[@id='rightClickBtn']") #Поиск кнопки для клика правой кнопкой
-actions.context_click(right_click_button).perform() #Выполнение клика правой кнопкой
-print("Произведен клик правой кнопкой мыши")
-assert driver.find_element(By.XPATH, "//p[@id='rightClickMessage']").text == "You have done a right click", "Двойной клик не произведен" #Проверка, что клик правой кнопкой выполнен
-print("Клик правой кнопкой мыши выполнен")
+current_date = (datetime.now() + timedelta(days=10)).strftime("%m/%d/%Y") #Определяем текущую дату и смещаем её на 10 дней
+date_input.send_keys(current_date) #Ввод нужной даты
+print("Требуемая дата введена")
 
-time.sleep(1) #Задержка исполнения кода
+time.sleep(3) #Задержка исполнения кода
 driver.close()
