@@ -28,18 +28,23 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://demoqa.com/radio-button"  #Открываемая страница
+base_url = "https://demoqa.com/buttons"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
-#Установка чекбокса и его проверка
-radio_button = driver.find_element(By.XPATH, "//*[@id='app']/div/div/div/div[2]/div[2]/div[3]/label") #Поиск элемента label на странице для клика (второй)
-print("Радиобатон найден на странице")
-radio_button.click() #Установка чекбокса
-assert driver.find_element(By.XPATH, "//*[@id='impressiveRadio']").is_selected(), "Радиобатон не установлен" #Проверка что радиобатон установлен
-print("Радиобатон установлен")
-assert driver.find_element(By.XPATH, "//*[@id='app']/div/div/div/div[2]/div[2]/p").text == "You have selected Impressive" , "Установлен не второй радиобатон" #Проверка что радиобатон установлен правильно (выбран второй)
-print("Радиобатон установлен правильно, выбран второй вариант")
+#Проверка кликов: двойной клик и клик правой кнопкой
+actions = ActionChains(driver)
+double_click_button = driver.find_element(By.XPATH, "//button[@id='doubleClickBtn']") #Поиск кнопки для двойного клика
+actions.double_click(double_click_button).perform() #Выполнение двойного клика
+print("Произведен двойной клик мыши")
+assert driver.find_element(By.XPATH, "//p[@id='doubleClickMessage']").text == "You have done a double click", "Двойной клик не произведен" #Проверка, что двойной клик произведен
+print("Двойной клик мыши выполнен")
+
+right_click_button = driver.find_element(By.XPATH, "//button[@id='rightClickBtn']") #Поиск кнопки для клика правой кнопкой
+actions.context_click(right_click_button).perform() #Выполнение клика правой кнопкой
+print("Произведен клик правой кнопкой мыши")
+assert driver.find_element(By.XPATH, "//p[@id='rightClickMessage']").text == "You have done a right click", "Двойной клик не произведен" #Проверка, что клик правой кнопкой выполнен
+print("Клик правой кнопкой мыши выполнен")
 
 time.sleep(1) #Задержка исполнения кода
 driver.close()
