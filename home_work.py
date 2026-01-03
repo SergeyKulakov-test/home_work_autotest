@@ -27,19 +27,24 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://demoqa.com/date-picker"  #Открываемая страница
+base_url = "https://the-internet.herokuapp.com/horizontal_slider"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
-#Ввод даты
-date_input = driver.find_element(By.XPATH, "//input[@id='datePickerMonthYearInput']") #Поиск поля для ввода даты
-date_input.send_keys(Keys.CONTROL + "a") #Выделение содержимого поля
-date_input.send_keys(Keys.DELETE)  #Очистка поля даты
-print("Произведена очистка поля для ввода даты")
+#Перемещение ползунка
+actions = ActionChains(driver)
 
-current_date = (datetime.now() + timedelta(days=10)).strftime("%m/%d/%Y") #Определяем текущую дату и смещаем её на 10 дней
-date_input.send_keys(current_date) #Ввод нужной даты
-print("Требуемая дата введена")
+slider = driver.find_element(By.XPATH, "//input[@type='range']") #Поиск ползунка на странице
+actions.click_and_hold(slider).move_by_offset(-20, 0).release().perform() #Передвижение ползунка на 800 пикселей в лево
+print("Произведено перемещение ползунка в лево")
+
+#Проверка значекний после перемещения ползунка
+value_slider = slider.get_attribute('value') #Значение ползунка внутри инпута
+print(f"Значение в инпуте {value_slider}")
+text_value_slider = driver.find_element(By.XPATH, "//span[@id='range']").text #Значение ползунка отображемые на странице
+print(f"Значение на странице {text_value_slider}")
+assert value_slider == text_value_slider, "Значение ползука не совпадает со значением на странице"
+print(f"Значения совпадают")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
