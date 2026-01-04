@@ -46,8 +46,8 @@ select_country_name = select_country.text #Выбранное название
 select_country.click() #Подтверждение выбора (клик)
 print("Выбор подтвержден")
 
-assert click_drop.text == select_country_name, "Выбранная страна совпадает с установленной в списке" #Проверка соответствия выбранного названия и записанного после выбора
-print("Выбор верен")
+assert click_drop.text == select_country_name, "Сохраненный текст не совпадает с текстом в поле dropdown" #Проверка соответствия выбранного названия и записанного после выбора
+print("Сохраненный текст совпадает с текстом в поле dropdown")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
