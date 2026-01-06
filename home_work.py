@@ -28,50 +28,37 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://lambdatest.com/selenium-playground/simple-form-demo"  #Открываемая страница
+base_url = "https://www.lambdatest.com/selenium-playground/iframe-demo/"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
 driver.find_element(By.XPATH, "//button[@id='CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection']").click() #Закрываем куки
 
-#Ввод и проверка отправки сообщения
-message = "Hello World!" #Вводимое сообщение
-input_message = driver.find_element(By.XPATH, "//input[@id='user-message']") #Поле для ввода сообщения
-print("Поле ввода сообщений найдено")
-input_message.send_keys(message) #Ввод сообщения
-print("Сообщение введено")
-driver.find_element(By.XPATH, "//button[@id='showInput']").click() #Отправка сообщения
-print("Сообщение отправлено")
+#Взаимодействие с iFrame
+iframe = driver.find_element(By.XPATH, "//iframe[@id='iFrame1']") #Поиск на странице iFrame
+print("iFrame найден на странице")
+driver.switch_to.frame(iframe) #Переход в iFrame
+print("Перешли в iFrame")
 
-value_show_message = driver.find_element(By.XPATH, "//p[@id='message']").text #Текст отправленного сообщения
-print(f"Текст отправленного сообщения {value_show_message}")
-assert value_show_message == message, "Текст отправленного сообщения не соответствует введенному тексту" #Проверка сообщения
-print("Текст отправленного сообщения соответствует введенному тексту")
+input_pole = driver.find_element(By.XPATH, "//*[@id='__next']/div/div[2]") #Поиск поля ввода
+print("Поле для ввода найдено на странице")
+input_pole.send_keys(Keys.CONTROL + "a") #Выделение текста
+input_pole.send_keys(Keys.DELETE) #Удаление текста
+print("Поле очищено")
 
+new_value_input_pole = "Hello World!"
+input_pole.send_keys(new_value_input_pole) #Ввод текста
+print("Введен новый текст")
+input_pole.send_keys(Keys.CONTROL + "a") #Выделение текста
 
-#Проверка работы форм для сложения
-number_1 = 101 #Первое вводимое число
-number_2 = 102 #Второе вводимое число
-summ = number_1 + number_2 #Сумма вводимых чисел
-
-input_number_1 = driver.find_element(By.XPATH, "//input[@id='sum1']") #Поле для ввода первого числа
-print("Поле ввода первого числа найдено")
-input_number_1.send_keys(number_1) #Ввод первого числа
-print("Второе число введено")
-
-input_number_2 = driver.find_element(By.XPATH, "//input[@id='sum2']") #Поле для ввода второго числа
-print("Поле ввода второго числа найдено")
-input_number_2.send_keys(number_2) #Ввод первого числа
-print("Второе число введено")
-
-driver.find_element(By.XPATH, "//*[@id='gettotal']/button").click() #Нажатие кнопки для вычисления суммы
-print("Кнопка суммы нажата")
-
-result_summ = driver.find_element(By.XPATH, "//p[@id='addmessage']").text #Полученная сумма
-print(f"Итоговая сумма {result_summ}")
-assert float(result_summ) == summ, "Полученная сумма не совпадает ссуммой введеных чисел" #Проверка правильности вычислений
-print("Сумма верна")
-
+driver.find_element(By.XPATH, "//button[@title='Bold']").click() #Делаем текст жирным
+print("Текст сделан жирным")
+driver.find_element(By.XPATH, "//button[@title='Italic']").click() #Делаем текст курсивом
+print("Текст сделан курсивом")
+current_value_input_pole = driver.find_element(By.XPATH, "//*[@id='__next']/div/div[2]/b/i").text #Получаем существующий текст в поле
+print(current_value_input_pole)
+assert current_value_input_pole == new_value_input_pole, "Введенный текст не совпадает с текстом в поле"
+print("Текст совпадает")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
