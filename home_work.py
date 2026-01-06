@@ -28,26 +28,50 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://lambdatest.com/selenium-playground/jquery-dropdown-search-demo"  #Открываемая страница
+base_url = "https://lambdatest.com/selenium-playground/simple-form-demo"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
 driver.find_element(By.XPATH, "//button[@id='CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection']").click() #Закрываем куки
 
-#Выбор Dropdown
-click_drop = driver.find_element(By.XPATH, "(//span[@aria-labelledby='select2-country-container'])") #Поиск выпадающего списка на странице
-print("Выподающий список найден")
-click_drop.click() #Раскрытие выпадающего списка
-print("Клик на выподающий список выполнен")
+#Ввод и проверка отправки сообщения
+message = "Hello World!" #Вводимое сообщение
+input_message = driver.find_element(By.XPATH, "//input[@id='user-message']") #Поле для ввода сообщения
+print("Поле ввода сообщений найдено")
+input_message.send_keys(message) #Ввод сообщения
+print("Сообщение введено")
+driver.find_element(By.XPATH, "//button[@id='showInput']").click() #Отправка сообщения
+print("Сообщение отправлено")
 
-select_country = driver.find_element(By.XPATH, "(//li[@class='select2-results__option'])[7]") #Поиск элемента для выбора внутри выпадающего списка
-print("Выбраны Netherlands")
-select_country_name = select_country.text #Выбранное название
-select_country.click() #Подтверждение выбора (клик)
-print("Выбор подтвержден")
+value_show_message = driver.find_element(By.XPATH, "//p[@id='message']").text #Текст отправленного сообщения
+print(f"Текст отправленного сообщения {value_show_message}")
+assert value_show_message == message, "Текст отправленного сообщения не соответствует введенному тексту" #Проверка сообщения
+print("Текст отправленного сообщения соответствует введенному тексту")
 
-assert click_drop.text == select_country_name, "Сохраненный текст не совпадает с текстом в поле dropdown" #Проверка соответствия выбранного названия и записанного после выбора
-print("Сохраненный текст совпадает с текстом в поле dropdown")
+
+#Проверка работы форм для сложения
+number_1 = 101 #Первое вводимое число
+number_2 = 102 #Второе вводимое число
+summ = number_1 + number_2 #Сумма вводимых чисел
+
+input_number_1 = driver.find_element(By.XPATH, "//input[@id='sum1']") #Поле для ввода первого числа
+print("Поле ввода первого числа найдено")
+input_number_1.send_keys(number_1) #Ввод первого числа
+print("Второе число введено")
+
+input_number_2 = driver.find_element(By.XPATH, "//input[@id='sum2']") #Поле для ввода второго числа
+print("Поле ввода второго числа найдено")
+input_number_2.send_keys(number_2) #Ввод первого числа
+print("Второе число введено")
+
+driver.find_element(By.XPATH, "//*[@id='gettotal']/button").click() #Нажатие кнопки для вычисления суммы
+print("Кнопка суммы нажата")
+
+result_summ = driver.find_element(By.XPATH, "//p[@id='addmessage']").text #Полученная сумма
+print(f"Итоговая сумма {result_summ}")
+assert float(result_summ) == summ, "Полученная сумма не совпадает ссуммой введеных чисел" #Проверка правильности вычислений
+print("Сумма верна")
+
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
