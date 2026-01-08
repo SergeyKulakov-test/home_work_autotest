@@ -1,9 +1,7 @@
 import time
 from datetime import datetime, timedelta
 
-import faker
 from faker import Faker
-
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from selenium.webdriver import Keys, ActionChains
