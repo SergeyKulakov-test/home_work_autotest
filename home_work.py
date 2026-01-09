@@ -1,14 +1,11 @@
 import time
-from datetime import datetime, timedelta
 
 from faker import Faker
 from selenium import webdriver
-from selenium.webdriver.support.select import Select
-from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
+
 
 
 #Драйвера браузера Chrome, настройки
