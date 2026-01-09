@@ -24,31 +24,19 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://demoqa.com/browser-windows"  #Открываемая страница
+base_url = "https://www.lambdatest.com/selenium-playground/upload-file-demo" #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
 
-#Работа с вкладками и окнами
-driver.find_element(By.XPATH, "//button[@id='tabButton']").click() #Нажатие кнопки открытия новой вкладки
-print("Кнопка открытия вкладки нажата")
-driver.switch_to.window(driver.window_handles[1]) #Переход на новую вкладку
-time.sleep(1) #Задержка исполнения кода
-new_tab_text = driver.find_element(By.XPATH, "//h1[@id='sampleHeading']").text #Текст для проверки на новой вкладке
-assert new_tab_text == "This is a sample page", "Текст на новой странице не совпадает с требуемым"
-print("Переход на новую вкладку осуществлен")
-driver.switch_to.window(driver.window_handles[0]) #Переход на первую страницу
-time.sleep(1) #Задержка исполнения кода
-
-driver.find_element(By.XPATH, "//button[@id='windowButton']").click() #Нажатие кнопки открытия нового окна
-print("Кнопка открытия нового окна нажата")
-time.sleep(1) #Задержка исполнения кода
-driver.switch_to.window(driver.window_handles[2]) #Переход в новое окно
-new_window_text = driver.find_element(By.XPATH, "//h1[@id='sampleHeading']").text #Текст для проверки в новом окне
-assert new_window_text == "This is a sample page", "Текст на новой странице не совпадает с требуемым"
-print("Переход в новое окно осуществлен")
-time.sleep(1) #Задержка исполнения кода
-driver.switch_to.window(driver.window_handles[0]) #Переход на первую страницу
+#Загрузка файла
+path_upload = "C:\\Users\\user\\PycharmProjects\\Auto-test-project\\files_upload\\one_file.jpg" #Путь к файлу
+driver.find_element(By.XPATH, "//input[@id='file']").send_keys(path_upload) #Загрузка файла
+print("Файл добавлен")
+upload_file_text = driver.find_element(By.XPATH, "//div[@id='error']").text #Текст после загрузки файла
+print(upload_file_text)
+assert upload_file_text == "File Successfully Uploaded", "Файл не загружен"
+print("Файл загружен успешно")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
