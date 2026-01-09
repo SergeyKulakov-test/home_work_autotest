@@ -1,11 +1,9 @@
 import time
 
-from faker import Faker
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-
 
 
 #Драйвера браузера Chrome, настройки
@@ -26,18 +24,41 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://www.saucedemo.com/"  #Открываемая страница
+base_url = "https://the-internet.herokuapp.com/javascript_alerts"  #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
-fake = Faker("en_US") #Определяем язык генерации данных
 
-#Генерация данных
-name = fake.first_name() #Генерируем имя
-print(name)
-user_name = driver.find_element(By.XPATH, "//input[@id='user-name']") #Поиск поля Username(input)
-user_name.send_keys(name) #Заполнение поля Username
-print("Поле Username заполнено")
+#Работа с Alert
+driver.find_element(By.XPATH, "//button[@onclick='jsAlert()']").click() #Нажатие кнопки для вызова Alert
+print("Кнопка вызова Alert нажата")
+time.sleep(1) #Задержка исполнения кода
+driver.switch_to.alert.accept() #Закрытие окна Alert
+print("Alert закрыт")
+value_accept_alert = driver.find_element(By.XPATH, "//p[@id='result']").text
+assert value_accept_alert == "You successfully clicked an alert", "Текст после закрытия Alert не совпадает"
+print("Alert закрыт успешно")
+
+driver.find_element(By.XPATH, "//button[@onclick='jsConfirm()']").click() #Нажатие кнопки для вызова Confirm
+print("Кнопка вызова Confirm нажата")
+time.sleep(1) #Задержка исполнения кода
+driver.switch_to.alert.dismiss() #Закрытие окна Confirm
+print("Confirm закрыт")
+value_dismiss_confirm = driver.find_element(By.XPATH, "//p[@id='result']").text
+assert value_dismiss_confirm == "You clicked: Cancel", "Текст после закрытия Confirm не совпадает"
+print("Confirm отменен успешно")
+
+text_promt = "Hellow" #Текст для ввода в окно Prompt
+driver.find_element(By.XPATH, "//button[@onclick='jsPrompt()']").click() #Нажатие кнопки для вызова Prompt
+print("Кнопка вызова Prompt нажата")
+time.sleep(1) #Задержка исполнения кода
+driver.switch_to.alert.send_keys(text_promt) #ввод текста
+print(text_promt)
+driver.switch_to.alert.accept() #Закрытие окна Prompt
+print("Prompt закрыт")
+value_accept_prompt = driver.find_element(By.XPATH, "//p[@id='result']").text
+assert value_accept_prompt == f"You entered: {text_promt}", "Текст после закрытия Prompt не совпадает"
+print("Prompt закрыт успешно")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
