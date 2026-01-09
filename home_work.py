@@ -19,7 +19,7 @@ prefs = {
 }
 options.add_experimental_option("prefs", prefs)
 options.add_argument("--password-store=basic")
-#options.add_argument('--headless') #Запуск в фоновом режиме (без открытия браузера)
+
 
 driver = webdriver.Chrome(
     options=options,
