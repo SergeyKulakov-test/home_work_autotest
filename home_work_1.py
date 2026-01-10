@@ -5,7 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-
+from selenium.common.exceptions import NoSuchElementException
 
 #Драйвера браузера Chrome, настройки
 options = webdriver.ChromeOptions()
@@ -24,19 +24,22 @@ driver = webdriver.Chrome(
     service=ChromeService(ChromeDriverManager().install())
 )
 
-base_url = "https://www.lambdatest.com/selenium-playground/upload-file-demo" #Открываемая страница
+base_url = "https://demoqa.com/dynamic-properties" #Открываемая страница
 driver.get(base_url)
 driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
 
 
-#Загрузка файла
-path_upload = "C:\\Users\\user\\PycharmProjects\\Auto-test-project\\files_upload\\one_file.jpg" #Путь к файлу
-driver.find_element(By.XPATH, "//input[@id='file']").send_keys(path_upload) #Загрузка файла
-print("Файл добавлен")
-upload_file_text = driver.find_element(By.XPATH, "//div[@id='error']").text #Текст после загрузки файла
-print(upload_file_text)
-assert upload_file_text == "File Successfully Uploaded", "Файл не загружен"
-print("Файл загружен успешно")
+#Обработка иcключений
+try:
+    driver.find_element(By.XPATH, "//button[@id='visibleAfter']").click() #Нажатие на кнопку
+    print("Кнопка нажата")
+except NoSuchElementException:
+    print("Получили NoSuchElementException")
+    time.sleep(2) #Задержка исполнения кода
+    driver.refresh() #Перезагрузка страницы
+    time.sleep(5) #Задержка исполнения кода
+    driver.find_element(By.XPATH, "//button[@id='visibleAfter']").click()  #Нажатие на кнопку
+    print("Кнопка нажата")
 
 time.sleep(3) #Задержка исполнения кода
 driver.close()
