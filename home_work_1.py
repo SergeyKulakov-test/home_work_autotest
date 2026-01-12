@@ -7,19 +7,14 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 
 #функции для тестов
-def authorization():
-    username = "standard_user"  # Имя для входа
-    password = "secret_sauce"  # Пароль для входа
-    user_name = driver.find_element(By.XPATH, "//input[@id='user-name']")  # Поиск поля Username(input)
-    user_name.send_keys(username)  # Заполнение поля Username
-    print("Ввод  Username")
-    user_password = driver.find_element(By.XPATH, "//input[@id='password']")  # Поиск поля Password (input)
-    user_password.send_keys(password)  # Заполнение поля Password
-    print("Ввод Password")
+def authorization(username, password):
+    driver.find_element(By.XPATH, "//input[@id='user-name']").send_keys(username)  # Заполнение поля Username
+    print(f"Ввод {username}")
+    driver.find_element(By.XPATH, "//input[@id='password']").send_keys(password)  # Заполнение поля Password
+    print(f"Ввод {password}")
     time.sleep(2)  # Задержка исполнения кода
     driver.find_element(By.ID, "login-button").click()  # Нажатие кнопки Login
     print("Нажатие на кнопку Login")
-
 
 def product_selection():
     products = {
@@ -30,33 +25,25 @@ def product_selection():
         5: 'Sauce Labs Onesie',
         6: 'Test.allTheThings() T-Shirt (Red)'
     }
-    print("""
-          Выбери один из следующих товаров и укажи его номер:
-          1 - Sauce Labs Backpack, 
-          2 - Sauce Labs Bike Light, 
-          3 - Sauce Labs Bolt T-Shirt, 
-          4 - Sauce Labs Fleece Jacket, 
-          5 - Sauce Labs Onesie, 
-          6 - Test.allTheThings() T-Shirt (Red)
-          """)
+    print("Выбери один из следующих товаров и укажи его номер:")
+    for key, value in products.items():
+        print(f"{key} - {value}")
+
     while True:
         try:
-            user_input = input()
-            number = int(user_input)
-            if 0 < number and number <= 6:
-                selected_product = products[number]
-                print(products[number])
-                return selected_product
+            user_input = int(input())
+            if 0 < user_input and user_input <= 6:
+                print(products[user_input])
+                return products[user_input]
             else:
                 print("Введите число от 1 до 6.")
         except ValueError:
             print("Ошибка: Введено не число. Пожалуйста, введите целое число.")
 
 
-def enter_to_product_page(str):
-    driver.find_element(By.XPATH, f"//div[contains(text(), '{str}')]").click()  # Переход на страницу продукта
-    print(f"Перешли на страницу товара {str}")
-
+def enter_to_product_page(product_name):
+    driver.find_element(By.XPATH, f"//div[contains(text(), '{product_name}')]").click()  # Переход на страницу продукта
+    print(f"Перешли на страницу товара {product_name}")
 
 def checks_upon_payment():
     product_name = driver.find_element(By.XPATH,
@@ -69,23 +56,16 @@ def checks_upon_payment():
     assert price_product == value_price_product, "Название товара не совпадает"  # Проверка стоимости товара
     print(price_product)
 
-
-def filling_in_data():
-    value_first_name = fake.first_name()  # Генерируем имя для оформления заказа
-    value_last_name = fake.last_name()  # Генерируем фамилию для оформления заказа
-    value_postal_сode = fake.postcode()  # Генерируем код для оформления заказа
-
-    first_name = driver.find_element(By.XPATH, "//input[@id='first-name']")  # Поле имени
-    first_name.send_keys(value_first_name)  # Ввод имени
+def filling_in_data(value_first_name, value_last_name, value_postal_сode):
+    driver.find_element(By.XPATH, "//input[@id='first-name']").send_keys(value_first_name)  # Ввод имени
     print(value_first_name)
 
-    last_name = driver.find_element(By.XPATH, "//input[@id='last-name']")  # Поле фамилии
-    last_name.send_keys(value_last_name)  # Ввод фамилии
+    driver.find_element(By.XPATH, "//input[@id='last-name']").send_keys(value_last_name)  # Ввод фамилии
     print(value_last_name)
 
-    postal_сode = driver.find_element(By.XPATH, "//input[@id='postal-code']")  # Поле postal-code
-    postal_сode.send_keys(value_postal_сode)  # Ввоод postal-code
+    driver.find_element(By.XPATH, "//input[@id='postal-code']").send_keys(value_postal_сode)  # Ввоод postal-code
     print(value_postal_сode)
+
 
 #Драйвера браузера Chrome, настройки
 options = webdriver.ChromeOptions()
@@ -113,7 +93,7 @@ fake = Faker("en_US") #Определяем язык генерации данн
 #Работа с явным и неявным ожиданием
 
 #Вход в магазин
-authorization()
+authorization("standard_user", "secret_sauce")
 driver.implicitly_wait(2)
 value_text_page = driver.find_element(By.XPATH, "//span[contains(text(), 'Products')]").text
 assert value_text_page == "Products", "Текст на странице не найден" #Проверка загрузки страницы
@@ -149,7 +129,7 @@ assert value_text_page == "Checkout: Your Information", "Текст на стр�
 print("Страница заполнения данных")
 
 #Заполнение данных
-filling_in_data()
+filling_in_data(fake.first_name(), fake.last_name(), fake.postcode())
 time.sleep(2) #Задержка исполнения кода
 
 driver.find_element(By.XPATH, "//input[@id='continue']").click() #Переход к оплате
