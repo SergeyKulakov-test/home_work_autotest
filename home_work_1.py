@@ -5,142 +5,78 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-
-#функции для тестов
-def authorization(username, password):
-    driver.find_element(By.XPATH, "//input[@id='user-name']").send_keys(username)  # Заполнение поля Username
-    print(f"Ввод {username}")
-    driver.find_element(By.XPATH, "//input[@id='password']").send_keys(password)  # Заполнение поля Password
-    print(f"Ввод {password}")
-    time.sleep(2)  # Задержка исполнения кода
-    driver.find_element(By.ID, "login-button").click()  # Нажатие кнопки Login
-    print("Нажатие на кнопку Login")
-
-def product_selection():
-    products = {
-        1: 'Sauce Labs Backpack',
-        2: 'Sauce Labs Bike Light',
-        3: 'Sauce Labs Bolt T-Shirt',
-        4: 'Sauce Labs Fleece Jacket',
-        5: 'Sauce Labs Onesie',
-        6: 'Test.allTheThings() T-Shirt (Red)'
-    }
-    print("Выбери один из следующих товаров и укажи его номер:")
-    for key, value in products.items():
-        print(f"{key} - {value}")
-
-    while True:
-        try:
-            user_input = int(input())
-            if 0 < user_input and user_input <= 6:
-                print(products[user_input])
-                return products[user_input]
-            else:
-                print("Введите число от 1 до 6.")
-        except ValueError:
-            print("Ошибка: Введено не число. Пожалуйста, введите целое число.")
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
-def enter_to_product_page(product_name):
-    driver.find_element(By.XPATH, f"//div[contains(text(), '{product_name}')]").click()  # Переход на страницу продукта
-    print(f"Перешли на страницу товара {product_name}")
+class TestAddProductToCart:
 
-def checks_upon_payment():
-    product_name = driver.find_element(By.XPATH,
-                                       "//div[@class='cart_item_label']/a/div").text  # Название товара на странице
-    assert product_name == selected_product, "Название товара не совпадает"  # Проверка названия товара
-    print(product_name)
+    def __init__(self):
+        self.driver = None
+        self.options = None
 
-    price_product = float(driver.find_element(By.XPATH, "//div[@data-test='subtotal-label']").text.split("$")[
-                              1])  # Стоимость товара на странице
-    assert price_product == value_price_product, "Название товара не совпадает"  # Проверка стоимости товара
-    print(price_product)
+    def __create_options(self):
+        self.options = webdriver.ChromeOptions()
+        self.options.add_experimental_option("detach", True)
+        return self.options
 
-def filling_in_data(value_first_name, value_last_name, value_postal_сode):
-    driver.find_element(By.XPATH, "//input[@id='first-name']").send_keys(value_first_name)  # Ввод имени
-    print(value_first_name)
+    def __create_driver(self):
+        self.driver = webdriver.Chrome(
+            options=self.__create_options(),
+            service=ChromeService(ChromeDriverManager().install())
+        )
+        return self.driver
 
-    driver.find_element(By.XPATH, "//input[@id='last-name']").send_keys(value_last_name)  # Ввод фамилии
-    print(value_last_name)
+    def set_window_size(self, width, height):
+        self.__create_driver().set_window_size(width, height)
+        print(f"Размер окна установлен: {width}x{height}")  #Открытие окна с заданным разрешением
 
-    driver.find_element(By.XPATH, "//input[@id='postal-code']").send_keys(value_postal_сode)  # Ввоод postal-code
-    print(value_postal_сode)
+    def open_url(self, base_url):
+        self.driver.get(base_url)
+        print("Страница открыта")
+
+    def close_page(self):
+         self.driver.close()
+         print("Страница закрыта")
+
+    def authorization(self, username = "standard_user", password = "secret_sauce"):
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='user-name']"))).send_keys(username)  # Заполнение поля Username
+        print(f"Ввод {username}")
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='password']"))).send_keys(password)  # Заполнение поля Password
+        print(f"Ввод {password}")
+        time.sleep(2)  # Задержка исполнения кода
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.ID, "login-button"))).click()  # Нажатие кнопки Login
+        print("Нажатие на кнопку Login")
+
+    def add_product_to_cart(self):
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='add-to-cart-sauce-labs-backpack']"))).click()  # Добавление в корзину первого товара
+        print("Товар добавлен в корзину")
+
+    def open_cart(self):
+        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='shopping_cart_container']/a"))).click() # Открытие корзины
+        print("Кнопка корзины нажата")
 
 
-#Драйвера браузера Chrome, настройки
-options = webdriver.ChromeOptions()
-options.add_experimental_option("detach", True)
-# Опции для отключения проверки утечки паролей
-prefs = {
-    "credentials_enable_service": False,
-    "profile.password_manager_enabled": False,
-    "profile.password_manager_leak_detection": False  # Отключаем обнаружение утечек
-}
-options.add_experimental_option("prefs", prefs)
-options.add_argument("--password-store=basic")
+if __name__ == "__main__":
+    add_product = TestAddProductToCart() #Создаем экземпляр класса
+    add_product.set_window_size(1200, 900) #Устанавливаем размер окна
+    add_product.open_url("https://www.saucedemo.com") #Открываем страницу
+    time.sleep(2)
 
-driver = webdriver.Chrome(
-    options=options,
-    service=ChromeService(ChromeDriverManager().install())
-)
+    add_product.authorization() #Авторизация
 
-base_url = "https://www.saucedemo.com/" #Открываемая страница
-driver.get(base_url)
-driver.set_window_size(1200, 900)  #Открытие окна с заданным разрешением
+    value_text_page = add_product.driver.find_element(By.XPATH, "//span[contains(text(), 'Products')]").text
+    assert value_text_page == "Products", "Текст на странице не найден"  # Проверка загрузки страницы
+    print("Страница каталога загружена")
+    time.sleep(2)
 
-fake = Faker("en_US") #Определяем язык генерации данных
+    add_product.add_product_to_cart() #Добавление товара в корзину
+    time.sleep(2)
 
-#Работа с явным и неявным ожиданием
+    add_product.open_cart() #Переход в корзину
+    value_text_page = add_product.driver.find_element(By.XPATH, "//span[contains(text(), 'Your Cart')]").text
+    assert value_text_page == "Your Cart", "Текст на странице не найден"  # Проверка загрузки страницы
+    print("Страница корзины загружена")
+    time.sleep(2)
 
-#Вход в магазин
-authorization("standard_user", "secret_sauce")
-driver.implicitly_wait(2)
-value_text_page = driver.find_element(By.XPATH, "//span[contains(text(), 'Products')]").text
-assert value_text_page == "Products", "Текст на странице не найден" #Проверка загрузки страницы
-print("Приветствую тебя в нашем интернет - магазине")
-
-#Выбор товара
-selected_product = product_selection()
-
-#Добавление товара в корзину
-enter_to_product_page(selected_product) #Переход на страницу продукта
-value_text_page = driver.find_element(By.XPATH, "//button[contains(text(), 'Back to products')]").text
-assert value_text_page == "Back to products", "Текст на странице не найден"  # Проверка загрузки страницы
-print("Страница продукта")
-value_price_product = float(driver.find_element(By.XPATH, "//div[@data-test='inventory-item-price']").text.replace("$", "")) #Значение цены товара
-print(value_price_product)
-driver.find_element(By.XPATH, "//button[@id='add-to-cart']").click() #Добавление в корзину
-print("Товар в корзине")
-time.sleep(2) #Задержка исполнения кода
-driver.find_element(By.XPATH, "//a[@data-test='shopping-cart-link']").click() #Переход в корзину
-print("Переход в корзину")
-
-#Оформление товара
-value_text_page = driver.find_element(By.XPATH, "//span[contains(text(), 'Your Cart')]").text
-assert value_text_page == "Your Cart", "Текст на странице не найден"  # Проверка загрузки страницы
-print("Страница корзины")
-time.sleep(2) #Задержка исполнения кода
-
-driver.find_element(By.XPATH, "//button[@id='checkout']").click() #Переход к оформлению
-print("Переход к оформлению")
-
-value_text_page = driver.find_element(By.XPATH, "//span[contains(text(), 'Checkout: Your Information')]").text
-assert value_text_page == "Checkout: Your Information", "Текст на странице не найден"  # Проверка загрузки страницы
-print("Страница заполнения данных")
-
-#Заполнение данных
-filling_in_data(fake.first_name(), fake.last_name(), fake.postcode())
-time.sleep(2) #Задержка исполнения кода
-
-driver.find_element(By.XPATH, "//input[@id='continue']").click() #Переход к оплате
-print("Переход к оплате")
-
-value_text_page = driver.find_element(By.XPATH, "//span[contains(text(), 'Checkout: Overview')]").text
-assert value_text_page == "Checkout: Overview", "Текст на странице не найден"  # Проверка загрузки страницы
-print("Страница оплаты")
-
-#Проверки на странице оплаты
-checks_upon_payment()
-
-time.sleep(3) #Задержка исполнения кода
-driver.close()
+    add_product.close_page()
