@@ -37,7 +37,7 @@ class TestOpenBrowser:
 
 
 if __name__ == "__main__":
-    open_browser = Test_Open_Browser() #Создаем экземпляр класса
+    open_browser = TestOpenBrowser() #Создаем экземпляр класса
     open_browser.set_window_size(1200, 900) #Устанавливаем размер окна
     open_browser.open_url("https://www.saucedemo.com") #Открываем страницу
     time.sleep(3)
