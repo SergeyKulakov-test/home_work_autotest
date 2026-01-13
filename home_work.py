@@ -5,7 +5,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
 
-class Test_Open_Browser:
+class TestOpenBrowser:
 
     def __init__(self):
         self.driver = None
