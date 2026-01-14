@@ -48,11 +48,15 @@ class TestAddProductToCart:
          print("Страница закрыта")
 
     def add_product_to_cart(self):
-        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='add-to-cart-sauce-labs-backpack']"))).click()  # Добавление в корзину первого товара
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//*[@id='add-to-cart-sauce-labs-backpack']"))
+        ).click()  # Добавление в корзину первого товара
         print("Товар добавлен в корзину")
 
     def open_cart(self):
-        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='shopping_cart_container']/a"))).click() # Открытие корзины
+        WebDriverWait(self.driver, 30).until(
+            EC.element_to_be_clickable((By.XPATH, "//*[@id='shopping_cart_container']/a"))
+        ).click() # Открытие корзины
         print("Кнопка корзины нажата")
 
 
