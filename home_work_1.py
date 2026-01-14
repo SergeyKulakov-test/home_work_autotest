@@ -7,6 +7,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
+from login_page import LoginPage
+
 
 class TestAddProductToCart:
 
@@ -17,6 +19,13 @@ class TestAddProductToCart:
     def __create_options(self):
         self.options = webdriver.ChromeOptions()
         self.options.add_experimental_option("detach", True)
+        prefs = {
+            "credentials_enable_service": False,
+            "profile.password_manager_enabled": False,
+            "profile.password_manager_leak_detection": False  # Отключаем обнаружение утечек
+        }
+        self.options.add_experimental_option("prefs", prefs)
+        self.options.add_argument("--password-store=basic")
         return self.options
 
     def __create_driver(self):
@@ -38,15 +47,6 @@ class TestAddProductToCart:
          self.driver.close()
          print("Страница закрыта")
 
-    def authorization(self, username = "standard_user", password = "secret_sauce"):
-        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='user-name']"))).send_keys(username)  # Заполнение поля Username
-        print(f"Ввод {username}")
-        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='password']"))).send_keys(password)  # Заполнение поля Password
-        print(f"Ввод {password}")
-        time.sleep(2)  # Задержка исполнения кода
-        WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.ID, "login-button"))).click()  # Нажатие кнопки Login
-        print("Нажатие на кнопку Login")
-
     def add_product_to_cart(self):
         WebDriverWait(self.driver, 30).until(EC.element_to_be_clickable((By.XPATH, "//*[@id='add-to-cart-sauce-labs-backpack']"))).click()  # Добавление в корзину первого товара
         print("Товар добавлен в корзину")
@@ -62,7 +62,8 @@ if __name__ == "__main__":
     add_product.open_url("https://www.saucedemo.com") #Открываем страницу
     time.sleep(2)
 
-    add_product.authorization() #Авторизация
+    login = LoginPage(add_product.driver) #Создаем экземпляр класса для авторизации
+    login.authorization() #Авторизация
 
     value_text_page = add_product.driver.find_element(By.XPATH, "//span[contains(text(), 'Products')]").text
     assert value_text_page == "Products", "Текст на странице не найден"  # Проверка загрузки страницы
